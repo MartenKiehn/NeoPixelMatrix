@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>NeoPixelMatrix</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .matrix-display {
+            display: grid;
+            grid-template-columns: repeat(var(--leds, 10), auto);
+            grid-template-rows: repeat(var(--stripes, 10), 20px);
+            grid-gap: 20px;
+            margin-top: 20px;
+        }
+
+        .matrix-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="bg-green-900 py-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-4xl font-semibold text-white">NeoPixelMatrix</h1>
+        <h1 class="text-2xl">💡</h1>
+    </div>
+</header>
+
+<!-- Content -->
+<div class="container mx-auto max-w-screen-lg mt-8 p-4">
+    <p>
+        NeoPixelMatrix is a project to control a LED matrix with a Raspberry Pi.
+    </p>
+
+    <div class="mt-4">
+        <label class="block font-semibold" for="stripes">Number of Stripes:</label>
+        <input class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-green-800 bg-green-100"
+               id="stripes" name="stripes"
+               type="number"/>
+
+        <label class="block font-semibold mt-4" for="leds">Number of LEDs in Stripe:</label>
+        <input class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-green-800 bg-green-100"
+               id="leds" name="leds"
+               type="number"/>
+
+        <div class="flex justify-end mt-4">
+            <button class="bg-green-800 text-white py-2 px-4 rounded hover:bg-green-700" onclick="createMatrix()" type="submit">Submit</button>
+        </div>
+    </div>
+
+    <!-- Matrix aus Checkboxen -->
+    <div class="mt-8 w-full" id="matrix-container"></div>
+
+    <!-- Farbauswahl -->
+    <div class="mt-8 flex items-center">
+        <label class="mr-2 font-semibold" for="colorPicker">Select Color:</label>
+        <input id="colorPicker" name="colorPicker" type="color"/>
+
+        <button class="bg-green-800 text-white py-2 px-4 rounded hover-bg-green-700 ml-2" onclick="setColor()">Set Color</button>
+    </div>
+
+    <!-- Anzeige der ausgewählten Farbe -->
+    <div class="mt-4">
+        <label class="block font-semibold">Selected Color:</label>
+        <input id="selectedColor" name="selectedColor" class="w-16 p-2 border rounded focus:outline-none focus:ring focus:border-green-800 bg-green-100" readonly />
+    </div>
+
+    <!-- Matrix-Anzeige -->
+    <div class="matrix-display" id="matrix-display" class="flex justify-around" style="--stripes: 10; --leds: 10;"></div>
+</div>
+
+<script>
+    function createMatrix() {
+        const stripes = parseInt(document.getElementById("stripes").value);
+        const leds = parseInt(document.getElementById("leds").value);
+        const matrixContainer = document.getElementById("matrix-container");
+        matrixContainer.innerHTML = ''; // Clear existing matrix
+
+        if (stripes > 0 && leds > 0) {
+            for (let i = 0; i < stripes; i++) {
+                const stripeDiv = document.createElement("div");
+                stripeDiv.classList.add("flex", "mb-2", "w-full", "justify-around", "align-center");
+                for (let j = 0; j < leds; j++) {
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    stripeDiv.appendChild(checkbox);
+                }
+                matrixContainer.appendChild(stripeDiv);
+            }
+        }
+
+        // Set CSS variables for the matrix display
+        const matrixDisplay = document.getElementById("matrix-display");
+        matrixDisplay.style.setProperty("--stripes", stripes);
+        matrixDisplay.style.setProperty("--leds", leds);
+
+        // Clear Matrix-Anzeige
+        updateMatrixDisplay();
+    }
+
+    function setColor() {
+        const colorPicker = document.getElementById("colorPicker");
+        const selectedColor = colorPicker.value;
+        const checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.style.backgroundColor = selectedColor;
+        });
+
+        // Anzeige der ausgewählten Farbe
+        const selectedColorInput = document.getElementById("selectedColor");
+        selectedColorInput.value = selectedColor;
+
+        // Aktualisieren der Matrix-Anzeige
+        updateMatrixDisplay();
+    }
+
+    function updateMatrixDisplay() {
+        const matrixDisplay = document.getElementById("matrix-display");
+        matrixDisplay.innerHTML = '';
+
+        const checkboxes = document.querySelectorAll("input[type=checkbox]");
+
+        checkboxes.forEach(function (checkbox) {
+            const matrixCheckbox = document.createElement("div");
+            matrixCheckbox.classList.add("matrix-checkbox");
+            matrixCheckbox.style.backgroundColor = checkbox.style.backgroundColor;
+            matrixDisplay.appendChild(matrixCheckbox);
+        });
+    }
+</script>
+</body>
+</html>

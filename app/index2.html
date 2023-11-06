@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>NeoPixelMatrix</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header class="bg-green-900 py-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-4xl font-semibold text-white">NeoPixelMatrix</h1>
+        <h1 class="text-2xl">💡</h1>
+    </div>
+</header>
+
+<!-- Content -->
+<div class="container mx-auto max-w-screen-lg mt-8 p-4">
+    <p>
+        NeoPixelMatrix is a project to control an LED matrix with a Raspberry Pi.
+    </p>
+
+    <div class="mt-4">
+        <label class="block font-semibold" for="stripes">Number of Stripes:</label>
+        <input class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-green-800 bg-green-100"
+               id="stripes" name="stripes"
+               type="number"/>
+
+        <label class="block font-semibold mt-4" for="leds">Number of LEDs in Stripe:</label>
+        <input class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-green-800 bg-green-100"
+               id="leds" name="leds"
+               type="number"/>
+
+        <div class="flex justify-end mt-4">
+            <button class="bg-green-800 text-white py-2 px-4 rounded hover:bg-green-700" onclick="createMatrix()"
+                    type="submit">Submit
+            </button>
+        </div>
+    </div>
+
+    <!-- Farbauswahl -->
+    <div class="mt-8 flex items-center">
+        <label class="mr-2 font-semibold" for="colorPicker">Select Color:</label>
+        <input id="colorPicker" name="colorPicker" type="color"/>
+
+        <button class="bg-green-800 text-white py-2 px-4 rounded hover-bg-green-700 ml-2" onclick="setColor()">Set
+            Color
+        </button>
+    </div>
+
+    <!-- Matrix aus Buttons -->
+    <div class="mt-8 w-full" id="matrix-container"></div>
+
+    <!-- Send Matrix as JSON -->
+    <div class="mt-8 flex justify-end">
+        <button class="bg-green-800 text-white py-2 px-4 rounded hover:bg-green-700" onclick="sendMatrix()">Send Matrix
+            as JSON
+        </button>
+    </div>
+
+
+</div>
+
+<!--... (vorheriger HTML-Code) ...-->
+
+<script>
+    let selectedColor = "#000"; // Standardfarbe
+
+    function createMatrix() {
+        const stripes = parseInt(document.getElementById("stripes").value);
+        const leds = parseInt(document.getElementById("leds").value);
+        const matrixContainer = document.getElementById("matrix-container");
+        matrixContainer.innerHTML = ''; // Clear existing matrix
+
+        if (stripes > 0 && leds > 0) {
+            for (let i = 0; i < stripes; i++) {
+                const stripeDiv = document.createElement("div");
+                stripeDiv.classList.add("flex", "justify-around", "mb-2");
+                for (let j = 0; j < leds; j++) {
+                    const button = document.createElement("button");
+                    button.classList.add("w-8", "h-8", "rounded-full", "color-white", "border", "border-gray-500");
+                    button.style.backgroundColor = selectedColor; // Weise die ausgewählte Farbe zu
+                    button.addEventListener("click", function () {
+                        this.style.backgroundColor = selectedColor; // Weise die ausgewählte Farbe zu, wenn geklickt
+                    });
+                    stripeDiv.appendChild(button);
+                }
+                matrixContainer.appendChild(stripeDiv);
+            }
+        }
+    }
+
+    function setColor() {
+        const colorPicker = document.getElementById("colorPicker");
+        selectedColor = colorPicker.value;
+    }
+
+    function sendMatrix() {
+        const matrixContainer = document.getElementById("matrix-container");
+        const matrix = [];
+
+        matrixContainer.childNodes.forEach(function (stripeDiv) {
+            const stripe = [];
+            stripeDiv.childNodes.forEach(function (button) {
+                const buttonColor = button.style.backgroundColor;
+                stripe.push(buttonColor);
+            });
+            matrix.push(stripe);
+        });
+
+        // Send matrix data to the backend using a POST request
+        fetch('/receive_matrix', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(matrix),
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Log the response from the server
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

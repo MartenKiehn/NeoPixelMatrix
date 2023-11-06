@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <!-- Farbauswahl -->
+    <!-- Color selection -->
     <div class="mt-8 flex items-center">
         <label class="mr-2 font-semibold" for="colorPicker">Select Color:</label>
         <input id="colorPicker" name="colorPicker" type="color"/>
@@ -49,7 +49,7 @@
         </button>
     </div>
 
-    <!-- Matrix aus Buttons -->
+    <!-- Matrix Buttons -->
     <div class="mt-8 w-full" id="matrix-container"></div>
 
     <!-- Send Matrix as JSON -->
@@ -62,10 +62,8 @@
 
 </div>
 
-<!--... (vorheriger HTML-Code) ...-->
-
 <script>
-    let selectedColor = "#000"; // Standardfarbe
+    let selectedColor = "#000";
 
     function createMatrix() {
         const stripes = parseInt(document.getElementById("stripes").value);
@@ -80,9 +78,9 @@
                 for (let j = 0; j < leds; j++) {
                     const button = document.createElement("button");
                     button.classList.add("w-8", "h-8", "rounded-full", "color-white", "border", "border-gray-500");
-                    button.style.backgroundColor = selectedColor; // Weise die ausgewählte Farbe zu
+                    button.style.backgroundColor = selectedColor;
                     button.addEventListener("click", function () {
-                        this.style.backgroundColor = selectedColor; // Weise die ausgewählte Farbe zu, wenn geklickt
+                        this.style.backgroundColor = selectedColor;
                     });
                     stripeDiv.appendChild(button);
                 }

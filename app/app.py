@@ -2,11 +2,9 @@ from flask import Flask, request, render_template
 
 app = Flask("LED Matrix")
 
-# Eine globale Variable, um die LED-Matrix-Daten zu speichern
 led_matrix_data = []
 
 
-# Routen zur Anzeige der HTML-Seite und zum Empfangen der JSON-Daten
 @app.route('/')
 def index():
     return render_template('index2.html')
@@ -16,7 +14,6 @@ def index():
 def receive_matrix():
     try:
         matrix_json = request.get_json()
-        # Überprüfen, ob die empfangenen Daten gültig sind, bevor sie gespeichert werden
         if isinstance(matrix_json, list):
             global led_matrix_data
             led_matrix_data = matrix_json

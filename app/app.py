@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 
 app = Flask("LED Matrix")
+app.static_url_path = 'static'
 
 led_matrix_data = []
 

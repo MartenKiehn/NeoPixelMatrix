@@ -6,13 +6,12 @@ Written for Raspberry Pi and WS2812B LED matrix displays.
 
 ![img.png](images/img.png)
 
-### Prepare the Raspberry Pi
-
-# Setting up WLAN on Raspberry Pi Zero
+# Prepare the Raspberry Pi
+## Setting up WLAN on Raspberry Pi Zero
 
 In this guide, you will learn how to set up a wireless LAN (Wi-Fi) connection on a Raspberry Pi Zero.
 
-## Prerequisites
+### Prerequisites
 
 Before you begin, make sure you have the following:
 
@@ -21,27 +20,27 @@ Before you begin, make sure you have the following:
 - USB Wi-Fi dongle (if your Raspberry Pi Zero doesn't have built-in Wi-Fi)
 - Access to a computer with an SD card reader
 
-## Set Up Wi-Fi and Enable Auto-Connect on Raspberry Pi
+### Set Up Wi-Fi and Enable Auto-Connect on Raspberry Pi
 
 This guide will help you configure a Wi-Fi connection on your Raspberry Pi and make it automatically connect on boot.
 
-### 1. Update and Upgrade Raspberry Pi OS
+#### 1. Update and Upgrade Raspberry Pi OS
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
 
-### 2. Install Wi-Fi Tools
+#### 2. Install Wi-Fi Tools
 ```bash
 sudo apt install wireless-tools wpasupplicant
 ```
 
-### 3. Check Available Wi-Fi Interfaces
+#### 3. Check Available Wi-Fi Interfaces
 ```bash
 iwconfig
 ```
 
-### 4. Edit Wi-Fi Configuration File
+#### 4. Edit Wi-Fi Configuration File
 ```bash
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 ```
@@ -53,17 +52,17 @@ network={
 }
 ```
 
-### 5. Enable the Wi-Fi Interface
+#### 5. Enable the Wi-Fi Interface
 ```bash
 sudo ifup wlan0
 ```
 
-### 6. Check Your Wi-Fi Connection
+#### 6. Check Your Wi-Fi Connection
 ```bash
 ifconfig wlan0
 ```
 
-### 7. Edit the Network Interfaces File
+#### 7. Edit the Network Interfaces File
 ```bash
 sudo nano /etc/network/interfaces
 ```
@@ -80,19 +79,19 @@ iface wlan0 inet manual
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
-### 8. Reboot to Apply Changes
+#### 8. Reboot to Apply Changes
 ```bash
 sudo reboot
 ```
 
-## Start Application
+### Start Application
 
-### Install Flask
+#### Install Flask
 ```bash
 $ pip install flask
 ```
 
-### Usage
+#### Usage
 
 ```bash
 $ python app.py

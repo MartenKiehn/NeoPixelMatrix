@@ -34,19 +34,22 @@
 
         <div class="flex justify-end mt-4">
             <button class="bg-green-800 text-white py-2 px-4 rounded hover:bg-green-700" onclick="createMatrix()"
-                    type="submit">Submit
+                    type="submit">
+                Create Matrix
             </button>
         </div>
     </div>
 
     <!-- Color selection -->
-    <div class="mt-8 flex items-center">
-        <label class="mr-2 font-semibold" for="colorPicker">Select Color:</label>
-        <input id="colorPicker" name="colorPicker" type="color"/>
-
-        <button class="bg-green-800 text-white py-2 px-4 rounded hover-bg-green-700 ml-2" onclick="setColor()">Set
-            Color
+    <div class="mt-8 flex items-center justify-items-center justify-around">
+        <div class="flex items-center justify-items-center">
+            <label class="mr-2 font-semibold" for="colorPicker">Select Color:</label>
+            <input id="colorPicker" name="colorPicker" type="color"/>
+        </div>
+        <button class="bg-green-800 text-white py-2 px-4 rounded hover-bg-green-700 ml-2" onclick="setColor()">
+            Set Color
         </button>
+        <div id="colorPreview" class="ml-2 w-8 h-8 rounded-full"></div>
     </div>
 
     <!-- Matrix Buttons -->
@@ -92,6 +95,9 @@
     function setColor() {
         const colorPicker = document.getElementById("colorPicker");
         selectedColor = colorPicker.value;
+
+        const colorPreview = document.getElementById("colorPreview");
+        colorPreview.style.backgroundColor = selectedColor;
     }
 
     function sendMatrix() {
